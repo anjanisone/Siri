@@ -1,0 +1,27 @@
+Embodiment Column,From Heartbeat Table,From Intervals Table,Transformation Logic,Comment
+user_id,hz_user_rid,hz_user_rid,Direct,User's unique ID in Horizon system
+avatar_id,avatar_id,,,The avatar being embodied; critical for avatar-level stats
+date,timestamp,interval_start,DATE(interval_start),The date the embodiment session took place
+world_id,world_id,world_id,Direct,The specific Horizon World the user was in
+session_id,session_id,session_id,Direct,Used to group continuous user activity
+session_start_time,MIN(timestamp) per session,interval_start,Direct,Start of user’s session; derived from earliest ping or interval
+session_end_time,MAX(timestamp) per session,interval_end,Direct,End of session; from last ping or interval
+duration_minutes,timestamp difference,interval_end - interval_start,"TIMESTAMPDIFF(MINUTE, interval_start, interval_end)",Total session duration in minutes
+is_embodied,avatar_id IS NOT NULL,,,True if user used an avatar in-world or in editor
+num_embodiments,COUNT where avatar_id IS NOT NULL,,,How many times embodiment was detected during the session
+first_embodiment_time,MIN(timestamp where avatar_id IS NOT NULL),,,When the user first embodied an avatar
+last_embodiment_time,MAX(timestamp where avatar_id IS NOT NULL),,,Last time the user was recorded as embodied
+num_avatar_switches,avatar_id change count per session,,,How many times the user changed avatars
+avatar_type,avatar_type,,,"Fantastical, Classic, etc."
+avatar_preset_id,avatar_preset_id,,,Which preset avatar was used
+num_editor_interactions,editor event count,,,Number of interactions in avatar editor (RUX)
+editor_session_duration,editor time per session,,,How long the user spent in editor mode
+pdp_opened,pdp_opened flag/event,,,Whether the user opened a product detail page (e.g. for a skin)
+time_to_first_embodiment,first_embodiment_time - session_start,,,Time from session start to first embodiment event
+num_times_pdp_opened,pdp_opened event count,,,Number of times PDP was opened during session
+rux_started,editor session start event,,,Whether the user launched the avatar editor
+rux_duration,editor session duration,,,Duration of avatar editor session
+purchases_made,join with transaction logs,join with transaction logs,External Join (non-interval),Number of purchases made during session (via IWP)
+device_type,device_type,interface,Map interface to device_type,"Type of device (Quest2, Quest3, Mobile, etc.)"
+platform,platform,platform,Direct,"VR, Mobile, etc."
+geo_region,geo,,,User’s region or country
